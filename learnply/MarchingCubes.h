@@ -1,5 +1,7 @@
 #include "polyhedron.h"
 
+float iso_value = 0.;
+
 class Cube {
 public:
 	Vertex* verts[8];
@@ -75,6 +77,34 @@ Cubes *init_cubes(Polyhedron* p)
 	}
 
 	return _cubes;
+}
+
+void MarchingCubes(Cubes* c, Polyhedron* p)
+{
+	printf("Value for isosurface: %f \n", iso_value);
+	for (int i = 0; i < p->nverts; i++)
+	{
+		Vertex* temp_v = p->vlist[i];
+		if (temp_v->scalar >= iso_value)
+		{
+			// 0 for < iso_value, 1 for >= iso_value, 2 for new vertexs add by linear interpolation
+			temp_v->type = 1;
+			temp_v->R = 1.;
+			temp_v->B = 0.;
+		}
+		else
+		{
+			temp_v->type = 0;
+			temp_v->R = 0.;
+			temp_v->B = 1.;
+		}
+	}
+}
+
+void set_new_iso_value()
+{
+	printf("Enter new value for isosurface: \n");
+	scanf("%f", &iso_value);
 }
 
 void free_cubes(Cubes *c)

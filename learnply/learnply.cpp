@@ -247,6 +247,8 @@ int main(int argc, char* argv[])
 	cubes->cubes[6].verts[7]->R = 1.;
 	*/
 
+	MarchingCubes(cubes, poly);
+
 	/*init glut and create window*/
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -1018,11 +1020,18 @@ void keyboard(unsigned char key, int x, int y) {
 		poly->write_info();
 
 		init_cubes(poly);
-
+		MarchingCubes(cubes, poly);
 		glutPostRedisplay();
 		break;
 	}
 	
+	case 'v':
+	{
+		set_new_iso_value();
+		MarchingCubes(cubes, poly);
+		glutPostRedisplay();
+		break;
+	}
     /*
 	case '3':
 	{
