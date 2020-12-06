@@ -4,6 +4,7 @@
 #include <string.h>
 #include <fstream>
 #include <vector>
+#include <windows.h>
 
 #include "glError.h"
 #include "gl/glew.h"
@@ -15,6 +16,7 @@
 #include "polyline.h"
 #include "trackball.h"
 #include "tmatrix.h"
+#include "MarchingCubes.h"
 
 Polyhedron* poly;
 
@@ -79,6 +81,7 @@ void display_selected_quad(Polyhedron* poly);
 
 /*display vis results*/
 void display_polyhedron(Polyhedron* poly);
+
 
 /*display utilities*/
 
@@ -176,6 +179,32 @@ void drawPolyline(PolyLine pl, double width = 1.0, double R = 1.0, double G = 0.
 	glDisable(GL_BLEND);
 }
 
+/* read all ply files in given directory*/
+char ply_files[50][100];
+int num_of_plys = 0;
+int current_file_idx = 0;
+char ply_dir[] = "../DataSets";
+
+void read_directory(char* directory_name)
+{
+	std::string pattern(directory_name);
+	pattern.append("\\*");
+	WIN32_FIND_DATA data;
+	HANDLE hFind;
+	if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) {
+		do {
+			if (strstr(data.cFileName, ".ply"))
+			{
+				strcpy(ply_files[num_of_plys], data.cFileName);
+				num_of_plys++;
+			}
+		} while (FindNextFile(hFind, &data) != 0);
+		FindClose(hFind);
+	}
+}
+
+Cubes* cubes;
+
 /******************************************************************************
 Main program.
 ******************************************************************************/
@@ -183,7 +212,19 @@ int main(int argc, char* argv[])
 {
 	/*load mesh from ply file*/
 	//FILE* this_file = fopen("../quadmesh_2D/vector_data/saddle.ply", "r");
-	FILE* this_file = fopen("../quadmesh_2D/scalar_data/sin_function.ply", "r");
+	read_directory(ply_dir);
+
+	printf("%s\n", ply_files[0]);
+
+	int idx = current_file_idx % num_of_plys;
+
+	char cur_ply[100];
+	strcpy(cur_ply, ply_dir);
+	strcat(cur_ply, "/");
+	strcat(cur_ply, ply_files[idx]);
+
+	FILE* this_file = fopen(cur_ply, "r");
+	printf("Open: %s\n", cur_ply);
 
 	poly = new Polyhedron(this_file);
 	fclose(this_file);
@@ -192,13 +233,26 @@ int main(int argc, char* argv[])
 	poly->initialize(); // initialize the mesh
 	poly->write_info();
 
+	cubes = init_cubes(poly);
+
+	/* Example of how to access vertexs in cubes
+	*  Getting the 7th cube vertexs and change color R to 1.
+	cubes->cubes[6].verts[0]->R = 1.;
+	cubes->cubes[6].verts[1]->R = 1.;
+	cubes->cubes[6].verts[2]->R = 1.;
+	cubes->cubes[6].verts[3]->R = 1.;
+	cubes->cubes[6].verts[4]->R = 1.;
+	cubes->cubes[6].verts[5]->R = 1.;
+	cubes->cubes[6].verts[6]->R = 1.;
+	cubes->cubes[6].verts[7]->R = 1.;
+	*/
 
 	/*init glut and create window*/
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(20, 20);
 	glutInitWindowSize(win_width, win_height);
-	glutCreateWindow("Scientific Visualization");
+	glutCreateWindow("Marching Cubes and MetaBalls");
 
 
 	/*initialize openGL*/
@@ -872,7 +926,7 @@ Callback function for scene display
 
 void display(void)
 {
-	glClearColor(1.0, 1.0, 1.0, 1.0);  // background for rendering color coding and lighting
+	glClearColor(0.0, 0.0, 0.0, 1.0);  // background for rendering color coding and lighting
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -887,11 +941,13 @@ void display(void)
 	CHECK_GL_ERROR();
 
 	/*display selected elements*/
+	/*
 	display_selected_vertex(poly);
 	CHECK_GL_ERROR();
 
 	display_selected_quad(poly);
 	CHECK_GL_ERROR();
+	*/
 
 	glFlush();
 	glutSwapBuffers();
@@ -919,6 +975,7 @@ void keyboard(unsigned char key, int x, int y) {
 		exit(0);
 		break;
 
+	
 	case '1':
 		display_mode = 1;
 		glutPostRedisplay();
@@ -929,6 +986,40 @@ void keyboard(unsigned char key, int x, int y) {
 		glutPostRedisplay();
 		break;
 
+	case '3':
+		display_mode = 3;
+		glutPostRedisplay();
+		break;
+
+	case 'n':
+	{
+		display_mode = 1;
+		poly->finalize();
+
+		current_file_idx += 1;
+
+		read_directory(ply_dir);
+
+		int idx = current_file_idx % num_of_plys;
+
+		char cur_ply[100];
+		strcpy(cur_ply, ply_dir);
+		strcat(cur_ply, "/");
+		strcat(cur_ply, ply_files[idx]);
+
+		FILE* this_file = fopen(cur_ply, "r");
+		printf("Open: %s\n", cur_ply);
+
+		poly = new Polyhedron(this_file);
+		fclose(this_file);
+
+		poly->initialize();
+		poly->write_info();
+		glutPostRedisplay();
+		break;
+	}
+	
+    /*
 	case '3':
 	{
 		display_mode = 3;
@@ -980,7 +1071,7 @@ void keyboard(unsigned char key, int x, int y) {
 		display_mode = 5;
 		//show the IBFV of the field
 		break;
-
+	*/
 	case 'r':
 		mat_ident(rotmat);
 		translation[0] = 0;
@@ -1008,6 +1099,24 @@ void display_polyhedron(Polyhedron* poly)
 	glShadeModel(GL_SMOOTH);
 	CHECK_GL_ERROR();
 
+	switch (display_mode)
+	{
+		case 1:
+		{
+			glBegin(GL_POINTS);
+			for (int i = 0; i < poly->nverts; i++) {
+				Vertex* temp_v = poly->vlist[i];
+				//printf("i: %d x: %f y: %f z: %f\n", i, temp_v->x, temp_v->y, temp_v->z);
+				glColor3f(temp_v->R, temp_v->G, temp_v->B);
+				glVertex3f(temp_v->x, temp_v->y, temp_v->z);
+			}
+			glEnd();
+		}
+
+	}
+
+
+	/*
 	switch (display_mode) {
 	case 1:
 	{
@@ -1117,4 +1226,5 @@ void display_polyhedron(Polyhedron* poly)
 		displayIBFV();
 		break;
 	}
+	*/
 }

@@ -24,9 +24,11 @@ class Vertex {
 public:
 	double x,y,z;			/*coordinates*/
 	double vx, vy, vz;		/*vector field*/
-	double scalar = 0;		/*scalar field*/
+	double scalar = 0.;		/*scalar field*/
 
-	double R = 0, G = 0, B = 0;		/*color*/
+	double R = 0., G = 0., B = 1.;		/*color*/
+
+	int type = 0;   // 0 for scalar < choose value; 1 for scalar > choose value; 2 for scalar = choose value
 
 	int index;
 
@@ -68,7 +70,6 @@ public:
 	icVector3 normal;
 	void *other_props;
 };
-
 
 class Polyhedron {
 public:
