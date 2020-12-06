@@ -265,7 +265,7 @@ int main(int argc, char* argv[])
 	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
-	glutIdleFunc(display);
+	glutIdleFunc(NULL);
 	glutMotionFunc(motion);
 	glutMouseFunc(mouse);
 	glutMouseWheelFunc(mousewheel);
@@ -995,7 +995,8 @@ void keyboard(unsigned char key, int x, int y) {
 	{
 		display_mode = 1;
 		poly->finalize();
-
+		//Unstable if free, just ignore memory leak for now
+		//free_cubes(cubes);
 		current_file_idx += 1;
 
 		read_directory(ply_dir);
@@ -1015,6 +1016,9 @@ void keyboard(unsigned char key, int x, int y) {
 
 		poly->initialize();
 		poly->write_info();
+
+		init_cubes(poly);
+
 		glutPostRedisplay();
 		break;
 	}

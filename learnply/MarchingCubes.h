@@ -76,3 +76,8 @@ Cubes *init_cubes(Polyhedron* p)
 
 	return _cubes;
 }
+
+void free_cubes(Cubes *c)
+{
+	free(c->cubes);
+}
