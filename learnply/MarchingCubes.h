@@ -3,6 +3,9 @@
 
 #include "polyhedron.h"
 #include "vector"
+#include "glError.h"
+#include "gl/glew.h"
+#include "gl/freeglut.h"
 
 struct Triangle
 {
@@ -11,6 +14,13 @@ struct Triangle
         Triangle(Vertex, Vertex, Vertex);
 
         Vertex verts[3];
+
+        Vertex normal;
+
+        Vertex operator[](int index)
+        {
+            return verts[index];
+        }
 };
 
 struct Cube
@@ -23,7 +33,6 @@ struct Cube
     int vTable;
     int eTable;
     Vertex crossing[8];
-    std::vector<Triangle> triangles;
 };
 
 class MarchingCubes
@@ -370,6 +379,8 @@ class MarchingCubes
             {  0,  3,  8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
             { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
         };
+
+        std::vector<Triangle> triangles;
 
         Vertex LERP(Vertex, Vertex, float, float = 0.00001);
 

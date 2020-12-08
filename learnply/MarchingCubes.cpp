@@ -12,6 +12,13 @@ Triangle::Triangle(Vertex a, Vertex b, Vertex c)
 	verts[0] = a;
 	verts[1] = b;
 	verts[2] = c;
+
+	Vertex u = b - a;
+	Vertex v = c - a;
+
+	normal.x = u.y * v.z - u.z * v.y;
+	normal.y = u.z * v.x - u.x * v.z;
+	normal.z = u.x * v.y - u.y * v.x;
 }
 
 Cube::Cube()
@@ -72,8 +79,6 @@ void MarchingCubes::Generate(Polyhedron* p)
 		/    |/
 	   7 --- 6
 	*/
-
-	int triCount = 0;
 
 	for (int i = 0; i < num_of_cubes; i++)
 	{
@@ -197,7 +202,7 @@ void MarchingCubes::Generate(Polyhedron* p)
 		 * Generate triangles
 		 */
 
-		cubes[i].triangles.clear();
+		triangles.clear();
 
 		 // The loop should run at most 5 times, since there is a
 		 // maximum of 5 triangles that can be generated per cube.
@@ -207,12 +212,11 @@ void MarchingCubes::Generate(Polyhedron* p)
 			Vertex b = cubes[i].crossing[i + 1];
 			Vertex c = cubes[i].crossing[i + 2];
 
-			cubes[i].triangles.push_back(Triangle(a, b, c));
-			triCount++;
+			triangles.push_back(Triangle(a, b, c));
 		}
 	}
 
-	printf("\nNumber of triangles: %d\n", triCount);
+	printf("\nNumber of triangles: %d\n", triangles.size());
 
 	printf("Value for isosurface: %f \n", iso_value);
 
@@ -257,7 +261,29 @@ Vertex MarchingCubes::LERP(Vertex a, Vertex b, float alpha, float epsilon)
 
 void MarchingCubes::Render()
 {
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	GLfloat mat_diffuse[4] = { 1.0, 1.0, 0.0, 0.0 };
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialf(GL_FRONT, GL_SHININESS, 50.0);
+
+	for (int i = 0; i < triangles.size(); i++)
+	{
+		glBegin(GL_TRIANGLES);
+		for (int j = 0; j < 3; j++)
+		{
+			glNormal3d(triangles[i][j].normal.x, triangles[i][j].normal.y, triangles[i][j].normal.z);
+			glVertex3d(triangles[i][j].x, triangles[i][j].y, triangles[i][j].z);
+		}
+		glEnd();
+	}
+
+	CHECK_GL_ERROR();
 }
 
 void MarchingCubes::SetIsoValue(float iso_value)
