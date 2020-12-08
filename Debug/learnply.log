@@ -1,7 +1,91 @@
 ﻿  MarchingCubes.cpp
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(13,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(118,1): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(23,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(128,1): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1274): message : see declaration of 'scanf'
+  learnply.cpp
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(24,28): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(29,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(55,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(56,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(110,20): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(111,20): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(112,20): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(121,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(121,18): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(121,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(142,14): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(145,18): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(145,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(145,12): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(146,45): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(146,33): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(146,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(147,39): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(147,29): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(147,19): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(167,14): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(170,18): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(170,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(170,12): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(172,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(173,55): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(173,40): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(173,25): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(174,49): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(174,36): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(174,23): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(198,1): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(222,1): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(223,1): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : see declaration of 'strcat'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(224,1): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : see declaration of 'strcat'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(226,1): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(208): message : see declaration of 'fopen'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(292,50): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(293,50): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(334,26): warning C4305: '=': truncation from 'double' to 'GLfloat'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(346,44): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(346,28): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(361,55): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(361,35): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(361,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(362,63): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(362,39): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(362,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(407,16): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(454,16): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(501,45): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(501,34): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(501,23): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(522,15): warning C4101: 'i': unreferenced local variable
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(523,10): warning C4101: 'mat_diffuse': unreferenced local variable
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(591,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(592,44): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(640,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(641,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(853,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(854,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(915,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(915,17): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1010,1): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1011,1): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : see declaration of 'strcat'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1012,1): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : see declaration of 'strcat'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1014,1): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(208): message : see declaration of 'fopen'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(972,6): warning C4101: 'i': unreferenced local variable
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1126,43): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1126,32): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1126,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1127,44): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1127,33): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\learnply.cpp(1127,22): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  Generating Code...
 learnply.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
   learnply.vcxproj -> C:\Users\ixmib\Documents\453_Final_Project\learnply\..\Debug\learnply.exe
   0 File(s) copied
