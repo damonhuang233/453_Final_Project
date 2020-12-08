@@ -328,7 +328,7 @@ void MarchingCubes::Generate(Polyhedron* p)
 
 		// The loop should run at most 5 times, since there is a
 		// maximum of 5 triangles that can be generated per cube.
-		for (int j = 0; triTable[cubes[i].vTable][j] != -1 && j < 15; j += 3)
+		for (int j = 0;  j < 15 && triTable[cubes[i].vTable][j] != -1 ; j += 3)
 		{
 			/*
 			if (i == 2)

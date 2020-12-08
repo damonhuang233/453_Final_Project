@@ -56,7 +56,9 @@ float  tmax = win_width / (SCALE*NPN);
 float  dmax = SCALE / win_width;
 unsigned char *pixels;
 
-float anim = 2.;
+#define ISO_START 4.
+
+float anim = ISO_START;
 int elp_mil_sec = 0;
 int pass_mil_sec = 0;
 int speed = 20;
@@ -1129,7 +1131,7 @@ void display_polyhedron(Polyhedron* poly)
 		case 1:
 		{
 			glDisable(GL_LIGHTING);
-			glPointSize(5);
+			glPointSize(2);
 			glBegin(GL_POINTS);
 			for (int i = 0; i < poly->nverts; i++)
 			{
@@ -1149,11 +1151,11 @@ void display_polyhedron(Polyhedron* poly)
 			int cur_elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
 			pass_mil_sec += cur_elp_mil_sec - elp_mil_sec;
 			if (anim < min_iso)
-				anim = 2.;
+				anim = ISO_START;
 			if (pass_mil_sec > (500 / speed))
 			{
 				anim -= 0.01;
-				//printf("iso_val: %f", anim);
+				//printf("iso_val: %f\n", anim);
 				pass_mil_sec = 0;
 				elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
 			}
