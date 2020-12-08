@@ -56,6 +56,8 @@ float  tmax = win_width / (SCALE*NPN);
 float  dmax = SCALE / win_width;
 unsigned char *pixels;
 
+float anim = 0;
+
 #define DM  ((float) (1.0/(100-1.0)))
 
 /******************************************************************************
@@ -203,7 +205,7 @@ void read_directory(char* directory_name)
 	}
 }
 
-Cubes* cubes;
+MarchingCubes* metaballs;
 
 /******************************************************************************
 Main program.
@@ -233,7 +235,8 @@ int main(int argc, char* argv[])
 	poly->initialize(); // initialize the mesh
 	poly->write_info();
 
-	cubes = init_cubes(poly);
+	metaballs = new MarchingCubes();
+	metaballs->Generate(poly);
 
 	/* Example of how to access vertexs in cubes
 	*  Getting the 7th cube vertexs and change color R to 1.
@@ -247,7 +250,7 @@ int main(int argc, char* argv[])
 	cubes->cubes[6].verts[7]->R = 1.;
 	*/
 
-	MarchingCubes(cubes, poly);
+	//MarchingCubes(isosurface, poly);
 
 	/*init glut and create window*/
 	glutInit(&argc, argv);
@@ -371,7 +374,7 @@ void init(void) {
 	mat_ident(rotmat);
 
 	/* select clearing color */
-	glClearColor(0.0, 0.0, 0.0, 0.0);  // background
+	glClearColor(0.2, 0.2, 0.2, 0.0);  // background
 	glShadeModel(GL_FLAT);
 	glPolygonMode(GL_FRONT, GL_FILL);
 
@@ -928,7 +931,7 @@ Callback function for scene display
 
 void display(void)
 {
-	glClearColor(0.0, 0.0, 0.0, 1.0);  // background for rendering color coding and lighting
+	glClearColor(0.2, 0.2, 0.2, 0.0);  // background for rendering color coding and lighting
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -1019,16 +1022,18 @@ void keyboard(unsigned char key, int x, int y) {
 		poly->initialize();
 		poly->write_info();
 
-		init_cubes(poly);
-		MarchingCubes(cubes, poly);
+		//isosurface->free_cubes();
+		metaballs->Generate(poly);
+		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
 	}
 	
 	case 'v':
 	{
-		set_new_iso_value();
-		MarchingCubes(cubes, poly);
+		metaballs->SetIsoValue(0);
+		metaballs->Generate(poly);
+		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
 	}
@@ -1104,6 +1109,7 @@ Diaplay the polygon with visualization results
 
 void display_polyhedron(Polyhedron* poly)
 {
+	/**/
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glPolygonOffset(1., 1.);
 
@@ -1116,16 +1122,27 @@ void display_polyhedron(Polyhedron* poly)
 	{
 		case 1:
 		{
+			glDisable(GL_LIGHTING);
+			glPointSize(5);
 			glBegin(GL_POINTS);
-			for (int i = 0; i < poly->nverts; i++) {
+			for (int i = 0; i < poly->nverts; i++)
+			{
 				Vertex* temp_v = poly->vlist[i];
 				//printf("i: %d x: %f y: %f z: %f\n", i, temp_v->x, temp_v->y, temp_v->z);
 				glColor3f(temp_v->R, temp_v->G, temp_v->B);
 				glVertex3f(temp_v->x, temp_v->y, temp_v->z);
 			}
 			glEnd();
-		}
 
+			//metaballs->Render(true, false);
+
+			break;
+		}
+		case 2:
+			metaballs->SetIsoValue(anim += .1);
+			metaballs->Generate(poly);
+			metaballs->Render(false, true);
+			break;
 	}
 
 

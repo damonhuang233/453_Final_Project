@@ -43,7 +43,37 @@ public:
 	icVector3 normal;
 	void *other_props = NULL;
 public:
+	Vertex() { x = 0; y = 0; z = 0; }
 	Vertex(double xx, double yy, double zz) { x = xx; y = yy; z = zz; }
+
+	Vertex operator+(Vertex v)
+	{
+		return Vertex(v.x + this->x, v.y + this->y, v.z + this->z);
+	}
+	Vertex operator-()
+	{
+		return Vertex(-this->x, -this->y, -this->z);
+	}
+	Vertex operator-(double d)
+	{
+		return Vertex(this->x - d, this->y - d, this->z - d);
+	}
+	Vertex operator-(Vertex v)
+	{
+		return Vertex(this->x - v.x, this->y - v.y, this->z - v.z);
+	}
+	friend Vertex operator-(double d, Vertex v)
+	{
+		return Vertex(d - v.x, d - v.y, d - v.z);
+	}
+	Vertex operator*(double d)
+	{
+		return Vertex(d * this->x, d * this->y, d * this->z);
+	}
+	Vertex operator/(double d)
+	{
+		return Vertex(this->x / d, this->y / d, this->z / d);
+	}
 };
 
 class Edge {
