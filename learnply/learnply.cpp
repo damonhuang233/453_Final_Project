@@ -56,8 +56,11 @@ float  tmax = win_width / (SCALE*NPN);
 float  dmax = SCALE / win_width;
 unsigned char *pixels;
 
-float anim = 0;
-
+float anim = 0.;
+int elp_mil_sec = 0;
+int pass_mil_sec = 0;
+int speed = 5;
+float max_iso = 20.;
 #define DM  ((float) (1.0/(100-1.0)))
 
 /******************************************************************************
@@ -236,6 +239,7 @@ int main(int argc, char* argv[])
 	poly->write_info();
 
 	metaballs = new MarchingCubes();
+	metaballs->SetIsoValue(10.);
 	metaballs->Generate(poly);
 
 	/* Example of how to access vertexs in cubes
@@ -983,16 +987,26 @@ void keyboard(unsigned char key, int x, int y) {
 	
 	case '1':
 		display_mode = 1;
+		metaballs->SetIsoValue(10.);
+		metaballs->Generate(poly);
+		glutIdleFunc(NULL);
 		glutPostRedisplay();
 		break;
 
 	case '2':
 		display_mode = 2;
+		anim = 0.;
+		glutIdleFunc(NULL);
+		metaballs->SetIsoValue(10.);
+		metaballs->Generate(poly);
 		glutPostRedisplay();
 		break;
 
 	case '3':
 		display_mode = 3;
+		anim = 0.;
+		elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
+		glutIdleFunc(display);
 		glutPostRedisplay();
 		break;
 
@@ -1029,14 +1043,6 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	}
 	
-	case 'v':
-	{
-		metaballs->SetIsoValue(0);
-		metaballs->Generate(poly);
-		//MarchingCubes(isosurface, poly);
-		glutPostRedisplay();
-		break;
-	}
     /*
 	case '3':
 	{
@@ -1139,7 +1145,20 @@ void display_polyhedron(Polyhedron* poly)
 			break;
 		}
 		case 2:
-			metaballs->SetIsoValue(anim += .1);
+			metaballs->Render(false, true);
+			break;
+		case 3:
+			int cur_elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
+			pass_mil_sec += cur_elp_mil_sec - elp_mil_sec;
+			if (anim > max_iso)
+				anim = 0.;
+			if (pass_mil_sec > (500 / speed))
+			{
+				anim += 0.1;
+				pass_mil_sec = 0;
+				elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
+			}
+			metaballs->SetIsoValue(anim);
 			metaballs->Generate(poly);
 			metaballs->Render(false, true);
 			break;

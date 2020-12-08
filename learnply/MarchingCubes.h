@@ -40,7 +40,7 @@ struct Cube
 class MarchingCubes
 {
 	private:
-		float iso_value = 0;
+		float iso_value = 0.;
 
 		int num_of_cubes;
 		Cube* cubes;

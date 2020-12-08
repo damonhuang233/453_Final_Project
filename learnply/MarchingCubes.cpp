@@ -372,9 +372,9 @@ void MarchingCubes::Generate(Polyhedron* p)
 		}
 	}
 
-	printf("\nNumber of triangles: %d\n", triangles.size());
+	//printf("\nNumber of triangles: %d\n", triangles.size());
 
-	printf("Value for isosurface: %f \n", iso_value);
+	//printf("Value for isosurface: %f \n", iso_value);
 }
 
 Vertex MarchingCubes::LERP(Vertex a, Vertex b, float alpha, float epsilon)
