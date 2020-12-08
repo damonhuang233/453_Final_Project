@@ -35,6 +35,7 @@ void MarchingCubes::free_cubes()
 		delete [] cubes;
 }
 
+//TODO: one method of optimization is to combine Init() and Generate()
 void MarchingCubes::Init(Polyhedron* p)
 {
 	free_cubes();
@@ -51,9 +52,9 @@ void MarchingCubes::Init(Polyhedron* p)
 
 	/* Order in Cube
 		0 --- 1
-		/     /
+		/|    /|
 	   3 --- 2 |
-	   | |   |
+	   | |   | |
 	   | 4 --- 5
 		/    |/
 	   7 --- 6
@@ -86,18 +87,59 @@ void MarchingCubes::Init(Polyhedron* p)
 		int idx_6 = idx_5 + (num_of_lines_per_axis + 1);
 		int idx_7 = idx_6 - 1;
 
-		cubes[i].points[0] = p->vlist[idx_0];
-		cubes[i].points[1] = p->vlist[idx_1];
-		cubes[i].points[2] = p->vlist[idx_2];
-		cubes[i].points[3] = p->vlist[idx_3];
-		cubes[i].points[4] = p->vlist[idx_4];
-		cubes[i].points[5] = p->vlist[idx_5];
-		cubes[i].points[6] = p->vlist[idx_6];
-		cubes[i].points[7] = p->vlist[idx_7];
+		Vertex* vert0 = p->vlist[idx_0];
+		Vertex* vert1 = p->vlist[idx_1];
+		Vertex* vert2 = p->vlist[idx_2];
+		Vertex* vert3 = p->vlist[idx_3];
+		Vertex* vert4 = p->vlist[idx_4];
+		Vertex* vert5 = p->vlist[idx_5];
+		Vertex* vert6 = p->vlist[idx_6];
+		Vertex* vert7 = p->vlist[idx_7];
+
+		cubes[i].points[0] = vert0;
+		cubes[i].points[1] = vert1;
+		cubes[i].points[2] = vert2;
+		cubes[i].points[3] = vert3;
+		cubes[i].points[4] = vert4;
+		cubes[i].points[5] = vert5;
+		cubes[i].points[6] = vert5;
+		cubes[i].points[7] = vert6;
+
+		/*
+		 * Store crossing information
+		 */
+
+		// Vertices
+		if (vert0->scalar >= iso_value)
+			cubes[i].verts |= v0;
+		if (vert1->scalar >= iso_value)
+			cubes[i].verts |= v1;
+		if (vert2->scalar >= iso_value)
+			cubes[i].verts |= v2;
+		if (vert3->scalar >= iso_value)
+			cubes[i].verts |= v3;
+		if (vert4->scalar >= iso_value)
+			cubes[i].verts |= v4;
+		if (vert5->scalar >= iso_value)
+			cubes[i].verts |= v5;
+		if (vert6->scalar >= iso_value)
+			cubes[i].verts |= v6;
+		if (vert7->scalar >= iso_value)
+			cubes[i].verts |= v7;
+
+		// Edges
+		int intersections = edgeTable[cubes[i].verts];
+
+		// if there are no intersections
+		if (intersections == 0b000000000000 || intersections == 0b111111111111)
+			continue;
+
+
 	}
 
 	printf("Value for isosurface: %f \n", iso_value);
 
+	// For coloring
 	for (int i = 0; i < p->nverts; i++)
 	{
 		Vertex* temp_v = p->vlist[i];

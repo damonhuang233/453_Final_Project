@@ -12,8 +12,9 @@ class Cube
 
 	    Vertex* points[8];
 
-	    int edges;
         int verts;
+	    int edges;
+        Vertex* crossing[8];
 };
 
 class MarchingCubes
@@ -41,7 +42,7 @@ class MarchingCubes
            7 ----- 6
         */
 
-        // Bit values for each vertex on a cube
+        // Bit values for each cube corner
         const int v0 = 0b00000001;
         const int v1 = 0b00000010;
         const int v2 = 0b00000100;
