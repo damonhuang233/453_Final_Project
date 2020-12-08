@@ -29,13 +29,12 @@ struct Triangle
 struct Cube
 {
     Cube();
-    ~Cube();
 
 	Vertex verts[8];
 
     int vTable;
     int eTable;
-    Vertex crossing[8];
+    Vertex crossing[12];
 };
 
 class MarchingCubes
@@ -383,7 +382,7 @@ class MarchingCubes
             { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
         };
 
-        std::vector<Triangle> triangles;
+        std::vector<Triangle*> triangles;
 
         Vertex LERP(Vertex, Vertex, float, float = 0.00001);
 

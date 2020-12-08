@@ -60,7 +60,7 @@ public:
 	}
 	Vertex operator-(Vertex v)
 	{
-		return Vertex(this->x - v.x, this->y - v.y, this->y - v.y);
+		return Vertex(this->x - v.x, this->y - v.y, this->z - v.z);
 	}
 	friend Vertex operator-(double d, Vertex v)
 	{

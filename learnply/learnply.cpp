@@ -56,6 +56,8 @@ float  tmax = win_width / (SCALE*NPN);
 float  dmax = SCALE / win_width;
 unsigned char *pixels;
 
+float anim = 0;
+
 #define DM  ((float) (1.0/(100-1.0)))
 
 /******************************************************************************
@@ -1120,6 +1122,7 @@ void display_polyhedron(Polyhedron* poly)
 	{
 		case 1:
 		{
+			glDisable(GL_LIGHTING);
 			glPointSize(5);
 			glBegin(GL_POINTS);
 			for (int i = 0; i < poly->nverts; i++)
@@ -1136,9 +1139,12 @@ void display_polyhedron(Polyhedron* poly)
 			break;
 		}
 		case 2:
+			metaballs->SetIsoValue(anim += .1);
+			metaballs->Generate(poly);
 			metaballs->Render(false, true);
 			break;
 	}
+
 
 	/*
 	switch (display_mode) {

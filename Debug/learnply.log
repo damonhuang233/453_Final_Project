@@ -1,16 +1,16 @@
 ﻿  MarchingCubes.cpp
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(44,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(119,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(120,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(121,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(122,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(123,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(124,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(125,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(126,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(298,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(316,1): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1274): message : see declaration of 'scanf'
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(26,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(51,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(65,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(132,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(133,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(134,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(135,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(136,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(137,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(138,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(139,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ixmib\Documents\453_Final_Project\learnply\MarchingCubes.cpp(428,21): warning C4018: '<': signed/unsigned mismatch
 learnply.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
   learnply.vcxproj -> C:\Users\ixmib\Documents\453_Final_Project\learnply\..\Debug\learnply.exe
   0 File(s) copied

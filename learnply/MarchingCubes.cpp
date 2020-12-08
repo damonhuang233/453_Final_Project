@@ -19,16 +19,23 @@ Triangle::Triangle(Vertex a, Vertex b, Vertex c)
 	normal.x = u.y * v.z - u.z * v.y;
 	normal.y = u.z * v.x - u.x * v.z;
 	normal.z = u.x * v.y - u.y * v.x;
+
+	if (normal.x == 0 && normal.y == 0 && normal.z == 0)
+		return;
+
+	float len = sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+
+	normal.x /= -len;
+	normal.y /= -len;
+	normal.z /= -len;
+
+	//std::cout << "NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << "\n";
 }
 
 Cube::Cube()
 {
 	vTable = 0b00000000;
 	eTable = 0b000000000000;
-}
-Cube::~Cube()
-{
-	
 }
 
 MarchingCubes::MarchingCubes()
@@ -54,6 +61,12 @@ void MarchingCubes::Reset()
 {
 	if (cubes)
 		delete [] cubes;
+
+	for (int i = 0; i < triangles.size(); i++)
+		if (triangles[i])
+			delete triangles[i];
+
+	triangles.clear();
 }
 
 void MarchingCubes::Generate(Polyhedron* p)
@@ -139,39 +152,51 @@ void MarchingCubes::Generate(Polyhedron* p)
 		 */
 
 		// Vertices
-		if (s0 >= iso_value)
+		if (s0 < iso_value)
 			cubes[i].vTable |= v0;
-		if (s1 >= iso_value)
+		if (s1 < iso_value)
 			cubes[i].vTable |= v1;
-		if (s2 >= iso_value)
+		if (s2 < iso_value)
 			cubes[i].vTable |= v2;
-		if (s3 >= iso_value)
+		if (s3 < iso_value)
 			cubes[i].vTable |= v3;
-		if (s4 >= iso_value)
+		if (s4 < iso_value)
 			cubes[i].vTable |= v4;
-		if (s5 >= iso_value)
+		if (s5 < iso_value)
 			cubes[i].vTable |= v5;
-		if (s6 >= iso_value)
+		if (s6 < iso_value)
 			cubes[i].vTable |= v6;
-		if (s7 >= iso_value)
+		if (s7 < iso_value)
 			cubes[i].vTable |= v7;
 
-		std::cout << "Verts for cube " << i << ": " << std::bitset<8>(cubes[i].vTable) << "\n";
+		/*
+		std::cout << "Verts for cube " << i << ": " << std::bitset<8>(cubes[i].vTable) << "\n"
+			      << "\ts0 >= iso_value: " << (s0 >= iso_value) << "\n"
+			      << "\ts1 >= iso_value: " << (s1 >= iso_value) << "\n"
+			      << "\ts2 >= iso_value: " << (s2 >= iso_value) << "\n"
+			      << "\ts3 >= iso_value: " << (s3 >= iso_value) << "\n"
+			      << "\ts4 >= iso_value: " << (s4 >= iso_value) << "\n"
+			      << "\ts5 >= iso_value: " << (s5 >= iso_value) << "\n"
+			      << "\ts6 >= iso_value: " << (s6 >= iso_value) << "\n"
+			      << "\ts7 >= iso_value: " << (s7 >= iso_value) << "\n";
+		*/
 
 		// Edges
 		int intersections = edgeTable[cubes[i].vTable];
 		cubes[i].eTable = intersections;
+
+		//std::cout << "Edges for cube " << i << ": " << std::bitset<12>(intersections) << "\n";
 
 		/*
 		 * Generate crossing points
 		 */
 
 		//@Todo: This can be optimized, as currently most edges (except the outer ones) will be
-		//		 calculated 4 times (because 4 adjacent cubes will share the same edge, and that
-		//		 edge will be separately calculated for each cube)
+		//		 repeatedly calculated 4 times (because 4 adjacent cubes will share the same edge,
+		//		 so that edge will be separately calculated for each cube)
 
 		// If there are no intersections
-		if (intersections == 0b000000000000 || intersections == 0b111111111111)
+		if (intersections == 0b000000000000)
 			continue;
 		
 		if (intersections & e01)
@@ -183,44 +208,150 @@ void MarchingCubes::Generate(Polyhedron* p)
 		if (intersections & e30)
 			cubes[i].crossing[3] = LERP(*vert3, *vert0, (iso_value - s3) / (s0 - s3));
 		if (intersections & e45)
-			cubes[i].crossing[0] = LERP(*vert4, *vert5, (iso_value - s4) / (s5 - s4));
+			cubes[i].crossing[4] = LERP(*vert4, *vert5, (iso_value - s4) / (s5 - s4));
 		if (intersections & e56)
-			cubes[i].crossing[1] = LERP(*vert5, *vert6, (iso_value - s5) / (s6 - s5));
+			cubes[i].crossing[5] = LERP(*vert5, *vert6, (iso_value - s5) / (s6 - s5));
 		if (intersections & e67)
-			cubes[i].crossing[2] = LERP(*vert6, *vert7, (iso_value - s6) / (s7 - s6));
+			cubes[i].crossing[6] = LERP(*vert6, *vert7, (iso_value - s6) / (s7 - s6));
 		if (intersections & e74)
-			cubes[i].crossing[3] = LERP(*vert7, *vert4, (iso_value - s7) / (s1 - s7));
+			cubes[i].crossing[7] = LERP(*vert7, *vert4, (iso_value - s7) / (s4 - s7));
 		if (intersections & e04)
-			cubes[i].crossing[0] = LERP(*vert0, *vert1, (iso_value - s0) / (s4 - s0));
+			cubes[i].crossing[8] = LERP(*vert0, *vert4, (iso_value - s0) / (s4 - s0));
 		if (intersections & e15)
-			cubes[i].crossing[1] = LERP(*vert1, *vert2, (iso_value - s1) / (s5 - s1));
+			cubes[i].crossing[9] = LERP(*vert1, *vert5, (iso_value - s1) / (s5 - s1));
 		if (intersections & e26)
-			cubes[i].crossing[2] = LERP(*vert2, *vert3, (iso_value - s2) / (s6 - s2));
+			cubes[i].crossing[10] = LERP(*vert2, *vert6, (iso_value - s2) / (s6 - s2));
 		if (intersections & e37)
-			cubes[i].crossing[3] = LERP(*vert3, *vert0, (iso_value - s3) / (s7 - s3));
+			cubes[i].crossing[11] = LERP(*vert3, *vert7, (iso_value - s3) / (s7 - s3));
 
+
+		/*
+		std::cout << "Crossings for cube " << i << ": " << std::bitset<12>(intersections) << "\n";
+
+		if (intersections & e01)
+			std::cout << "\n\t0 - e01: " << cubes[i].crossing[0].x << ", " << cubes[i].crossing[0].y << ", " << cubes[i].crossing[0].z << "\n";
+		if (intersections & e12)
+			std::cout << "\t1 - e12: " << cubes[i].crossing[1].x << ", " << cubes[i].crossing[1].y << ", " << cubes[i].crossing[1].z << "\n";
+		if (intersections & e23)
+			std::cout << "\t2 - e23: " << cubes[i].crossing[2].x << ", " << cubes[i].crossing[2].y << ", " << cubes[i].crossing[2].z << "\n";
+		if (intersections & e30)
+			std::cout << "\t3 - e30: " << cubes[i].crossing[3].x << ", " << cubes[i].crossing[3].y << ", " << cubes[i].crossing[3].z << "\n";
+		if (intersections & e45)
+			std::cout << "\t4 - e45: " << cubes[i].crossing[4].x << ", " << cubes[i].crossing[4].y << ", " << cubes[i].crossing[4].z << "\n";
+		if (intersections & e56)
+			std::cout << "\t5 - e56: " << cubes[i].crossing[5].x << ", " << cubes[i].crossing[5].y << ", " << cubes[i].crossing[5].z << "\n";
+		if (intersections & e67)
+			std::cout << "\t6 - e67: " << cubes[i].crossing[6].x << ", " << cubes[i].crossing[6].y << ", " << cubes[i].crossing[6].z << "\n";
+		if (intersections & e74)
+			std::cout << "\t7 - e74: " << cubes[i].crossing[7].x << ", " << cubes[i].crossing[7].y << ", " << cubes[i].crossing[7].z << "\n";
+		if (intersections & e04)
+			std::cout << "\t8 - e04: " << cubes[i].crossing[8].x << ", " << cubes[i].crossing[8].y << ", " << cubes[i].crossing[8].z << "\n";
+		if (intersections & e15)
+			std::cout << "\t9 - e15: " << cubes[i].crossing[9].x << ", " << cubes[i].crossing[9].y << ", " << cubes[i].crossing[9].z << "\n";
+		if (intersections & e26)
+			std::cout << "\t10 - e26: " << cubes[i].crossing[10].x << ", " << cubes[i].crossing[10].y << ", " << cubes[i].crossing[10].z << "\n";
+		if (intersections & e37)
+			std::cout << "\t11 - e37: " << cubes[i].crossing[11].x << ", " << cubes[i].crossing[11].y << ", " << cubes[i].crossing[11].z << "\n";
+		*/
+
+		/*
+		if (i == 1)
+		{
+			std::cout << "Crossings for cube " << i << ": " << std::bitset<12>(intersections) << "\n";
+
+			if (intersections & e01)
+				std::cout << "\t0 - e01: " << cubes[i].crossing[0].x << ", " << cubes[i].crossing[0].y << ", " << cubes[i].crossing[0].z << "\n"
+										   << "\t\ta: " << (*vert0).x << "," << (*vert0).y << "," << (*vert0).z << " - " << (*vert0).scalar << "\n"
+										   << "\t\tb: " << (*vert1).x << "," << (*vert1).y << "," << (*vert1).z << " - " << (*vert1).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s0) / (s1 - s0) << "\n";
+			if (intersections & e12)
+				std::cout << "\t1 - e12: " << cubes[i].crossing[1].x << ", " << cubes[i].crossing[1].y << ", " << cubes[i].crossing[1].z << "\n"
+										   << "\t\ta: " << (*vert1).x << "," << (*vert1).y << "," << (*vert1).z << " - " << (*vert1).scalar << "\n"
+										   << "\t\tb: " << (*vert2).x << "," << (*vert2).y << "," << (*vert2).z << " - " << (*vert2).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s1) / (s2 - s1) << "\n";
+			if (intersections & e23)
+				std::cout << "\t2 - e23: " << cubes[i].crossing[2].x << ", " << cubes[i].crossing[2].y << ", " << cubes[i].crossing[2].z << "\n"
+										   << "\t\ta: " << (*vert2).x << "," << (*vert2).y << "," << (*vert2).z << " - " << (*vert2).scalar << "\n"
+										   << "\t\tb: " << (*vert3).x << "," << (*vert3).y << "," << (*vert3).z << " - " << (*vert3).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s2) / (s3 - s2) << "\n";
+			if (intersections & e30)
+				std::cout << "\t3 - e30: " << cubes[i].crossing[3].x << ", " << cubes[i].crossing[3].y << ", " << cubes[i].crossing[3].z << "\n"
+										   << "\t\ta: " << (*vert3).x << "," << (*vert3).y << "," << (*vert3).z << " - " << (*vert3).scalar << "\n"
+										   << "\t\tb: " << (*vert0).x << "," << (*vert0).y << "," << (*vert0).z << " - " << (*vert0).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s3) / (s0 - s3) << "\n";
+			if (intersections & e45)
+				std::cout << "\t4 - e45: " << cubes[i].crossing[4].x << ", " << cubes[i].crossing[4].y << ", " << cubes[i].crossing[4].z << "\n"
+										   << "\t\ta: " << (*vert4).x << "," << (*vert4).y << "," << (*vert4).z << " - " << (*vert4).scalar << "\n"
+										   << "\t\tb: " << (*vert5).x << "," << (*vert5).y << "," << (*vert5).z << " - " << (*vert5).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s4) / (s5 - s4) << "\n";
+			if (intersections & e56)
+				std::cout << "\t5 - e56: " << cubes[i].crossing[5].x << ", " << cubes[i].crossing[5].y << ", " << cubes[i].crossing[5].z << "\n"
+										   << "\t\ta: " << (*vert5).x << "," << (*vert5).y << "," << (*vert5).z << " - " << (*vert5).scalar << "\n"
+										   << "\t\tb: " << (*vert6).x << "," << (*vert6).y << "," << (*vert6).z << " - " << (*vert6).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s5) / (s6 - s5) << "\n";
+			if (intersections & e67)
+				std::cout << "\t6 - e67: " << cubes[i].crossing[6].x << ", " << cubes[i].crossing[6].y << ", " << cubes[i].crossing[6].z << "\n"
+										   << "\t\ta: " << (*vert6).x << "," << (*vert6).y << "," << (*vert6).z << " - " << (*vert6).scalar << "\n"
+										   << "\t\tb: " << (*vert7).x << "," << (*vert7).y << "," << (*vert7).z << " - " << (*vert7).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s6) / (s7 - s6) << "\n";
+			if (intersections & e74)
+				std::cout << "\t7 - e74: " << cubes[i].crossing[7].x << ", " << cubes[i].crossing[7].y << ", " << cubes[i].crossing[7].z << "\n"
+										   << "\t\ta: " << (*vert7).x << "," << (*vert7).y << "," << (*vert7).z << " - " << (*vert7).scalar << "\n"
+										   << "\t\tb: " << (*vert4).x << "," << (*vert4).y << "," << (*vert4).z << " - " << (*vert4).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s7) / (s4 - s7) << "\n";
+			if (intersections & e04)
+				std::cout << "\t8 - e04: " << cubes[i].crossing[8].x << ", " << cubes[i].crossing[8].y << ", " << cubes[i].crossing[8].z << "\n"
+										   << "\t\ta: " << (*vert0).x << "," << (*vert0).y << "," << (*vert0).z << " - " << (*vert0).scalar << "\n"
+										   << "\t\tb: " << (*vert4).x << "," << (*vert4).y << "," << (*vert4).z << " - " << (*vert5).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s0) / (s4 - s0) << "\n";
+			if (intersections & e15)
+				std::cout << "\t9 - e15: " << cubes[i].crossing[9].x << ", " << cubes[i].crossing[9].y << ", " << cubes[i].crossing[9].z << "\n"
+										   << "\t\ta: " << (*vert1).x << "," << (*vert1).y << "," << (*vert1).z << " - " << (*vert0).scalar << "\n"
+										   << "\t\tb: " << (*vert5).x << "," << (*vert5).y << "," << (*vert5).z << " - " << (*vert6).scalar << "\n"
+										   << "\t\talpha: " << (iso_value - s1) / (s5 - s1) << "\n";
+			if (intersections & e26)
+				std::cout << "\t10 - e26: " << cubes[i].crossing[10].x << ", " << cubes[i].crossing[10].y << ", " << cubes[i].crossing[10].z << "\n"
+										    << "\t\ta: " << (*vert2).x << "," << (*vert2).y << "," << (*vert2).z << " - " << (*vert0).scalar << "\n"
+										    << "\t\tb: " << (*vert6).x << "," << (*vert6).y << "," << (*vert6).z << " - " << (*vert6).scalar << "\n"
+										    << "\t\talpha: " << (iso_value - s2) / (s6 - s2) << "\n";
+			if (intersections & e37)
+				std::cout << "\t11 - e37: " << cubes[i].crossing[11].x << ", " << cubes[i].crossing[11].y << ", " << cubes[i].crossing[11].z << "\n"
+										    << "\t\ta: " << (*vert3).x << "," << (*vert3).y << "," << (*vert3).z << " - " << (*vert0).scalar << "\n"
+										    << "\t\tb: " << (*vert7).x << "," << (*vert7).y << "," << (*vert7).z << " - " << (*vert7).scalar << "\n"
+										    << "\t\talpha: " << (iso_value - s3) / (s7 - s3) << "\n";
+		}
+		*/
 
 		/*
 		 * Generate triangles
 		 */
 
-		triangles.clear();
-
-		 // The loop should run at most 5 times, since there is a
-		 // maximum of 5 triangles that can be generated per cube.
-		for (int i = 0; triTable[cubes[i].vTable][i] != -1 && i < 15; i += 3)
+		// The loop should run at most 5 times, since there is a
+		// maximum of 5 triangles that can be generated per cube.
+		for (int j = 0; triTable[cubes[i].vTable][j] != -1 && j < 15; j += 3)
 		{
-			Vertex a = cubes[i].crossing[i];
-			Vertex b = cubes[i].crossing[i + 1];
-			Vertex c = cubes[i].crossing[i + 2];
+			/*
+			if (i == 2)
+				std::cout << "\tCrossings " << triTable[cubes[i].vTable][j] << ", " << triTable[cubes[i].vTable][j + 1] << ", " << triTable[cubes[i].vTable][j + 2] << "\n";
+			*/
+			Vertex a = cubes[i].crossing[triTable[cubes[i].vTable][j    ]];
+			Vertex b = cubes[i].crossing[triTable[cubes[i].vTable][j + 1]];
+			Vertex c = cubes[i].crossing[triTable[cubes[i].vTable][j + 2]];
 
-			triangles.push_back(Triangle(a, b, c));
+			triangles.push_back(new Triangle(a, b, c));
+
+			//std::cout << "TRI NORMAL: " << triangles.back().normal.x << ", " << triangles.back().normal.y << ", " << triangles.back().normal.z << "\n";
 		}
 	}
 
-	printf("\nNumber of triangles: %d\n", triangles.size());
-
-	printf("Value for isosurface: %f \n", iso_value);
+	/*
+	std::cout << "\nTriangles:\n";
+	for (int j = 0; j < triangles.size(); j++)
+		std::cout << j << ":\n"
+					   << "\t" << triangles[j][0].x << ", " << triangles[j][0].y << ", " << triangles[j][0].z << "\n"
+					   << "\t" << triangles[j][1].x << ", " << triangles[j][1].y << ", " << triangles[j][1].z << "\n"
+					   << "\t" << triangles[j][2].x << ", " << triangles[j][2].y << ", " << triangles[j][2].z << "\n";
+	*/
 
 	// For coloring
 	for (int i = 0; i < p->nverts; i++)
@@ -232,32 +363,23 @@ void MarchingCubes::Generate(Polyhedron* p)
 			temp_v->type = 1;
 			temp_v->R = 1.;
 			temp_v->B = 0.;
-
-			if (i == 0 || i == 1)
-			{
-				temp_v->R = 1;
-				temp_v->G = .5;
-				temp_v->B = .5;
-			}
 		}
 		else
 		{
 			temp_v->type = 0;
 			temp_v->R = 0.;
 			temp_v->B = 1.;
-
-			if (i == 0 || i == 1)
-			{
-				temp_v->R = 0;
-				temp_v->G = 0;
-				temp_v->B = .5;
-			}
 		}
 	}
+
+	printf("\nNumber of triangles: %d\n", triangles.size());
+
+	printf("Value for isosurface: %f \n", iso_value);
 }
 
 Vertex MarchingCubes::LERP(Vertex a, Vertex b, float alpha, float epsilon)
 {
+	/*
 	if (a.x < b.x || a.y < b.y || a.z < b.z)
 	{
 		Vertex tmp = a;
@@ -268,11 +390,19 @@ Vertex MarchingCubes::LERP(Vertex a, Vertex b, float alpha, float epsilon)
 	Vertex v;
 
 	if (fabs(a.scalar - b.scalar) > epsilon)
+	{
 		v = a + (b - a) / (b.scalar - a.scalar) * (alpha - a.scalar);
+
+		//v = (b - a) * alpha + a;
+		//v = Vertex(b.x - a.x, b.y - a.y, b.z - a.z) * alpha + a;
+	}
 	else
 		v = a;
 
 	return v;
+	*/
+
+	return (b - a) * alpha + a;
 }
 
 void MarchingCubes::Render(bool showPoints, bool showTriangles)
@@ -287,7 +417,7 @@ void MarchingCubes::Render(bool showPoints, bool showTriangles)
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 		glEnable(GL_LIGHT1);
-
+		
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		GLfloat mat_diffuse[4] = { 1.0, 1.0, 0.0, 0.0 };
 		GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -300,8 +430,11 @@ void MarchingCubes::Render(bool showPoints, bool showTriangles)
 			glBegin(GL_TRIANGLES);
 			for (int j = 0; j < 3; j++)
 			{
-				glNormal3d(triangles[i][j].normal.x, triangles[i][j].normal.y, triangles[i][j].normal.z);
-				glVertex3d(triangles[i][j].x, triangles[i][j].y, triangles[i][j].z);
+				//std::cout << "NORMAL: " << triangles[i][j].normal.x << ", " << triangles[i][j].normal.y << ", " << triangles[i][j].normal.z << "\n";
+
+				glNormal3d(triangles[i]->normal.x, triangles[i]->normal.y, triangles[i]->normal.z);
+				//glNormal3d(1, 1, 1);
+				glVertex3d(triangles[i]->verts[j].x, triangles[i]->verts[j].y, triangles[i]->verts[j].z);
 			}
 			glEnd();
 		}
@@ -312,6 +445,10 @@ void MarchingCubes::Render(bool showPoints, bool showTriangles)
 
 void MarchingCubes::SetIsoValue(float iso_value)
 {
+	/*
 	printf("Enter new value for isosurface: \n");
 	scanf("%f", &this->iso_value);
+	*/
+
+	this->iso_value = iso_value;
 }
