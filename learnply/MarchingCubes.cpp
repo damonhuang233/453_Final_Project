@@ -1,9 +1,23 @@
 #include "MarchingCubes.h"
 
+
+Triangle::Triangle()
+{
+	verts[0] = Vertex(0, 0, 0);
+	verts[1] = Vertex(0, 0, 0);
+	verts[2] = Vertex(0, 0, 0);
+}
+Triangle::Triangle(Vertex a, Vertex b, Vertex c)
+{
+	verts[0] = a;
+	verts[1] = b;
+	verts[2] = c;
+}
+
 Cube::Cube()
 {
-	verts = 0b00000000;
-	edges = 0b000000000000;
+	vTable = 0b00000000;
+	eTable = 0b000000000000;
 }
 Cube::~Cube()
 {
@@ -26,10 +40,10 @@ MarchingCubes::MarchingCubes(int iso_value)
 }
 MarchingCubes::~MarchingCubes()
 {
-	free_cubes();
+	Reset();
 }
 
-void MarchingCubes::free_cubes()
+void MarchingCubes::Reset()
 {
 	if (cubes)
 		delete [] cubes;
@@ -37,7 +51,7 @@ void MarchingCubes::free_cubes()
 
 void MarchingCubes::Generate(Polyhedron* p)
 {
-	free_cubes();
+	Reset();
 
 	int num_of_vertexs = p->nverts;
 
@@ -58,6 +72,8 @@ void MarchingCubes::Generate(Polyhedron* p)
 		/    |/
 	   7 --- 6
 	*/
+
+	int triCount = 0;
 
 	for (int i = 0; i < num_of_cubes; i++)
 	{
@@ -95,46 +111,108 @@ void MarchingCubes::Generate(Polyhedron* p)
 		Vertex* vert6 = p->vlist[idx_6];
 		Vertex* vert7 = p->vlist[idx_7];
 
-		cubes[i].points[0] = vert0;
-		cubes[i].points[1] = vert1;
-		cubes[i].points[2] = vert2;
-		cubes[i].points[3] = vert3;
-		cubes[i].points[4] = vert4;
-		cubes[i].points[5] = vert5;
-		cubes[i].points[6] = vert5;
-		cubes[i].points[7] = vert6;
+		float s0 = vert0->scalar;
+		float s1 = vert1->scalar;
+		float s2 = vert2->scalar;
+		float s3 = vert3->scalar;
+		float s4 = vert4->scalar;
+		float s5 = vert5->scalar;
+		float s6 = vert6->scalar;
+		float s7 = vert7->scalar;
+
+		cubes[i].verts[0] = *vert0;
+		cubes[i].verts[1] = *vert1;
+		cubes[i].verts[2] = *vert2;
+		cubes[i].verts[3] = *vert3;
+		cubes[i].verts[4] = *vert4;
+		cubes[i].verts[5] = *vert5;
+		cubes[i].verts[6] = *vert5;
+		cubes[i].verts[7] = *vert6;
 
 		/*
-		 * Store crossing information
+		 * Get crossing information
 		 */
 
 		// Vertices
-		if (vert0->scalar >= iso_value)
-			cubes[i].verts |= v0;
-		if (vert1->scalar >= iso_value)
-			cubes[i].verts |= v1;
-		if (vert2->scalar >= iso_value)
-			cubes[i].verts |= v2;
-		if (vert3->scalar >= iso_value)
-			cubes[i].verts |= v3;
-		if (vert4->scalar >= iso_value)
-			cubes[i].verts |= v4;
-		if (vert5->scalar >= iso_value)
-			cubes[i].verts |= v5;
-		if (vert6->scalar >= iso_value)
-			cubes[i].verts |= v6;
-		if (vert7->scalar >= iso_value)
-			cubes[i].verts |= v7;
+		if (s0 >= iso_value)
+			cubes[i].vTable |= v0;
+		if (s1 >= iso_value)
+			cubes[i].vTable |= v1;
+		if (s2 >= iso_value)
+			cubes[i].vTable |= v2;
+		if (s3 >= iso_value)
+			cubes[i].vTable |= v3;
+		if (s4 >= iso_value)
+			cubes[i].vTable |= v4;
+		if (s5 >= iso_value)
+			cubes[i].vTable |= v5;
+		if (s6 >= iso_value)
+			cubes[i].vTable |= v6;
+		if (s7 >= iso_value)
+			cubes[i].vTable |= v7;
 
 		// Edges
-		int intersections = edgeTable[cubes[i].verts];
+		int intersections = edgeTable[cubes[i].vTable];
+		cubes[i].eTable = intersections;
 
-		// if there are no intersections
+		/*
+		 * Generate crossing points
+		 */
+
+		//@Todo: This can be optimized, as currently most edges (except the outer ones) will be
+		//		 calculated 4 times (because 4 adjacent cubes will share the same edge, and that
+		//		 edge will be separately calculated for each cube)
+
+		// If there are no intersections
 		if (intersections == 0b000000000000 || intersections == 0b111111111111)
 			continue;
+		
+		if (intersections & e01)
+			cubes[i].crossing[0] = LERP(*vert0, *vert1, (iso_value - s0) / (s1 - s0));
+		if (intersections & e12)
+			cubes[i].crossing[1] = LERP(*vert1, *vert2, (iso_value - s1) / (s2 - s1));
+		if (intersections & e23)
+			cubes[i].crossing[2] = LERP(*vert2, *vert3, (iso_value - s2) / (s3 - s2));
+		if (intersections & e30)
+			cubes[i].crossing[3] = LERP(*vert3, *vert0, (iso_value - s3) / (s0 - s3));
+		if (intersections & e45)
+			cubes[i].crossing[0] = LERP(*vert4, *vert5, (iso_value - s4) / (s5 - s4));
+		if (intersections & e56)
+			cubes[i].crossing[1] = LERP(*vert5, *vert6, (iso_value - s5) / (s6 - s5));
+		if (intersections & e67)
+			cubes[i].crossing[2] = LERP(*vert6, *vert7, (iso_value - s6) / (s7 - s6));
+		if (intersections & e74)
+			cubes[i].crossing[3] = LERP(*vert7, *vert4, (iso_value - s7) / (s1 - s7));
+		if (intersections & e04)
+			cubes[i].crossing[0] = LERP(*vert0, *vert1, (iso_value - s0) / (s4 - s0));
+		if (intersections & e15)
+			cubes[i].crossing[1] = LERP(*vert1, *vert2, (iso_value - s1) / (s5 - s1));
+		if (intersections & e26)
+			cubes[i].crossing[2] = LERP(*vert2, *vert3, (iso_value - s2) / (s6 - s2));
+		if (intersections & e37)
+			cubes[i].crossing[3] = LERP(*vert3, *vert0, (iso_value - s3) / (s7 - s3));
 
 
+		/*
+		 * Generate triangles
+		 */
+
+		cubes[i].triangles.clear();
+
+		 // The loop should run at most 5 times, since there is a
+		 // maximum of 5 triangles that can be generated per cube.
+		for (int i = 0; triTable[cubes[i].vTable][i] != -1 && i < 15; i += 3)
+		{
+			Vertex a = cubes[i].crossing[i];
+			Vertex b = cubes[i].crossing[i + 1];
+			Vertex c = cubes[i].crossing[i + 2];
+
+			cubes[i].triangles.push_back(Triangle(a, b, c));
+			triCount++;
+		}
 	}
+
+	printf("\nNumber of triangles: %d\n", triCount);
 
 	printf("Value for isosurface: %f \n", iso_value);
 
@@ -156,6 +234,25 @@ void MarchingCubes::Generate(Polyhedron* p)
 			temp_v->B = 1.;
 		}
 	}
+}
+
+Vertex MarchingCubes::LERP(Vertex a, Vertex b, float alpha, float epsilon)
+{
+	if (a.x < b.x || a.y < b.y || a.z < b.z)
+	{
+		Vertex tmp = a;
+		a = b;
+		b = tmp;
+	}
+
+	Vertex v;
+
+	if (fabs(a.scalar - b.scalar) > epsilon)
+		v = a + (b - a) / (b.scalar - a.scalar) * (alpha - a.scalar);
+	else
+		v = a;
+
+	return v;
 }
 
 void MarchingCubes::Render()

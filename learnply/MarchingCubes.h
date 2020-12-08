@@ -4,17 +4,26 @@
 #include "polyhedron.h"
 #include "vector"
 
-class Cube
+struct Triangle
 {
     public:
-        Cube();
-        ~Cube();
+        Triangle();
+        Triangle(Vertex, Vertex, Vertex);
 
-	    Vertex* points[8];
+        Vertex verts[3];
+};
 
-        int verts;
-	    int edges;
-        Vertex* crossing[8];
+struct Cube
+{
+    Cube();
+    ~Cube();
+
+	Vertex verts[8];
+
+    int vTable;
+    int eTable;
+    Vertex crossing[8];
+    std::vector<Triangle> triangles;
 };
 
 class MarchingCubes
@@ -362,6 +371,8 @@ class MarchingCubes
             { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
         };
 
+        Vertex LERP(Vertex, Vertex, float, float = 0.00001);
+
         ///////////////////////////////////////////
         ///////////////////////////////////////////
         ///////////////////////////////////////////
@@ -376,7 +387,7 @@ class MarchingCubes
 		void Generate(Polyhedron *);
 		void Render();
 
-		void free_cubes();
+		void Reset();
 };
 
 #endif
