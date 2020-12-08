@@ -11,10 +11,19 @@ class vertex:
 def format_vertex(x):
     return "{:.6f}".format(round(x, 6))
 
-def _function(x, y, z, equation):
-    return float(eval(equation))
+def _function(_x, _y, _z, equations):
+    for eq in equations:
+        x_range = [eq[1][0], eq[1][1]]
+        y_range = [eq[1][2], eq[1][3]]
+        z_range = [eq[1][4], eq[1][5]]
+        if _x >= x_range[0] and _x <= x_range[1] and _y >= y_range[0] and _y <= y_range[1] and _z >= z_range[0] and _z <= z_range[1]:
+            x = _x - eq[2][0]
+            y = _y - eq[2][1]
+            z = _z - eq[2][2]
+            return float(eval(eq[0]))
+    return -9999999.
 
-def generate_data(equation, data, grid_len, num_p):
+def generate_data(equations, data, grid_len, num_p):
 
     data.append("ply")
     data.append("format ascii 1.0")
@@ -51,7 +60,7 @@ def generate_data(equation, data, grid_len, num_p):
                 v_x = tll_p[0] + float(k) * interval 
                 v_y = tll_p[1] - float(j) * interval 
                 v_z = tll_p[2] - float(i) * interval 
-                v_s = _function(v_x, v_y, v_z, equation)
+                v_s = _function(v_x, v_y, v_z, equations)
                 new_vertex = vertex(v_x, v_y, v_z, v_s)
                 xy_plane.append(new_vertex)
         vertexs.append(xy_plane)
@@ -119,19 +128,6 @@ def setup():
         if file_name[-4:] != ".ply":
             file_name += ".ply"
 
-    pass_check = False
-    while not pass_check:
-        print("Enter the scalar function: example: x * x + y * y + z * z")
-        equation = input()
-        try:
-            res = _function(float(1), float(2), float(3), equation)
-            print("x = 1., y = 2., z = 3., scalar = ", res)
-            check = input("Y/N: \n")
-            if check == "Y":
-                pass_check = True
-        except:
-            print("Try again.") 
-
     while True:
         grid_len = input("Length of the 3D grid: ")
         grid_len = float(grid_len)
@@ -143,8 +139,40 @@ def setup():
         num_p = int(num_p)
         if num_p > 1:
             break
+    
+    equations = []
+    pass_check = False
+    add_more = True
+    while not pass_check:
+        while add_more:
+            print("Enter the scalar function: example: x * x + y * y + z * z")
+            equation = input()
+            print("Range of x, y, z: ", "[",-float(grid_len/2.), ",", float(grid_len/2.), "]")
+            print("Enter the range of this function: example: -10. -5. 5. 10. -10. 10. (-10. <= x <= -5., 5. <= y <= 10., -10. <= z <= -10.)")
+            eq_range = input().split()
+            eq_range = [ float(x) for x in eq_range ]
+            print("Enter the orgin: example 0. 1. 2. ( move to (0., 1., 2.) )")
+            origin = input().split()
+            origin = [ float(x) for x in origin ]
+            equations.append( (equation, eq_range, origin) )
+            print("Current equations: ", equations)
+            print("Add more?  Y/N")
+            am = input()
+            if am == "N":
+                add_more = False
+        try:
+            res = _function(float(1), float(2), float(3), equations)
+            print("x = 1., y = 2., z = 3., scalar = ", res)
+            res = _function(float(-1), float(-2), float(-3), equations)
+            print("x = -1., y = -2., z = -3., scalar = ", res)
+            check = input("Y/N: \n")
+            if check == "Y":
+                pass_check = True
+        except:
+            equations.pop(-1)
+            print("Try again.") 
 
-    generate_data(equation, data, grid_len, num_p)
+    generate_data(equations, data, grid_len, num_p)
 
     output_file(data, file_name)
 
