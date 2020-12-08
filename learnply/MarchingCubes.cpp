@@ -71,7 +71,7 @@ void MarchingCubes::Generate(Polyhedron* p)
 	cubes = new Cube[num_of_cubes];
 
 	/* Order in Cube
-		0 --- 1
+		 0 --- 1
 		/|    /|
 	   3 --- 2 |
 	   | |   | |
@@ -156,6 +156,8 @@ void MarchingCubes::Generate(Polyhedron* p)
 		if (s7 >= iso_value)
 			cubes[i].vTable |= v7;
 
+		std::cout << "Verts for cube " << i << ": " << std::bitset<8>(cubes[i].vTable) << "\n";
+
 		// Edges
 		int intersections = edgeTable[cubes[i].vTable];
 		cubes[i].eTable = intersections;
@@ -230,12 +232,26 @@ void MarchingCubes::Generate(Polyhedron* p)
 			temp_v->type = 1;
 			temp_v->R = 1.;
 			temp_v->B = 0.;
+
+			if (i == 0 || i == 1)
+			{
+				temp_v->R = 1;
+				temp_v->G = .5;
+				temp_v->B = .5;
+			}
 		}
 		else
 		{
 			temp_v->type = 0;
 			temp_v->R = 0.;
 			temp_v->B = 1.;
+
+			if (i == 0 || i == 1)
+			{
+				temp_v->R = 0;
+				temp_v->G = 0;
+				temp_v->B = .5;
+			}
 		}
 	}
 }
@@ -259,31 +275,39 @@ Vertex MarchingCubes::LERP(Vertex a, Vertex b, float alpha, float epsilon)
 	return v;
 }
 
-void MarchingCubes::Render()
+void MarchingCubes::Render(bool showPoints, bool showTriangles)
 {
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	GLfloat mat_diffuse[4] = { 1.0, 1.0, 0.0, 0.0 };
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialf(GL_FRONT, GL_SHININESS, 50.0);
-
-	for (int i = 0; i < triangles.size(); i++)
+	if (showPoints)
 	{
-		glBegin(GL_TRIANGLES);
-		for (int j = 0; j < 3; j++)
-		{
-			glNormal3d(triangles[i][j].normal.x, triangles[i][j].normal.y, triangles[i][j].normal.z);
-			glVertex3d(triangles[i][j].x, triangles[i][j].y, triangles[i][j].z);
-		}
-		glEnd();
+		
 	}
 
-	CHECK_GL_ERROR();
+	if (showTriangles)
+	{
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHT1);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		GLfloat mat_diffuse[4] = { 1.0, 1.0, 0.0, 0.0 };
+		GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+		glMaterialf(GL_FRONT, GL_SHININESS, 50.0);
+
+		for (int i = 0; i < triangles.size(); i++)
+		{
+			glBegin(GL_TRIANGLES);
+			for (int j = 0; j < 3; j++)
+			{
+				glNormal3d(triangles[i][j].normal.x, triangles[i][j].normal.y, triangles[i][j].normal.z);
+				glVertex3d(triangles[i][j].x, triangles[i][j].y, triangles[i][j].z);
+			}
+			glEnd();
+		}
+
+		CHECK_GL_ERROR();
+	}
 }
 
 void MarchingCubes::SetIsoValue(float iso_value)

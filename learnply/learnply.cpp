@@ -203,7 +203,7 @@ void read_directory(char* directory_name)
 	}
 }
 
-MarchingCubes* isosurface;
+MarchingCubes* metaballs;
 
 /******************************************************************************
 Main program.
@@ -233,8 +233,8 @@ int main(int argc, char* argv[])
 	poly->initialize(); // initialize the mesh
 	poly->write_info();
 
-	isosurface = new MarchingCubes();
-	isosurface->Generate(poly);
+	metaballs = new MarchingCubes();
+	metaballs->Generate(poly);
 
 	/* Example of how to access vertexs in cubes
 	*  Getting the 7th cube vertexs and change color R to 1.
@@ -372,7 +372,7 @@ void init(void) {
 	mat_ident(rotmat);
 
 	/* select clearing color */
-	glClearColor(0.0, 0.0, 0.0, 0.0);  // background
+	glClearColor(0.2, 0.2, 0.2, 0.0);  // background
 	glShadeModel(GL_FLAT);
 	glPolygonMode(GL_FRONT, GL_FILL);
 
@@ -929,7 +929,7 @@ Callback function for scene display
 
 void display(void)
 {
-	glClearColor(0.0, 0.0, 0.0, 1.0);  // background for rendering color coding and lighting
+	glClearColor(0.2, 0.2, 0.2, 0.0);  // background for rendering color coding and lighting
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -1021,7 +1021,7 @@ void keyboard(unsigned char key, int x, int y) {
 		poly->write_info();
 
 		//isosurface->free_cubes();
-		isosurface->Generate(poly);
+		metaballs->Generate(poly);
 		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
@@ -1029,8 +1029,8 @@ void keyboard(unsigned char key, int x, int y) {
 	
 	case 'v':
 	{
-		isosurface->SetIsoValue(0);
-		isosurface->Generate(poly);
+		metaballs->SetIsoValue(0);
+		metaballs->Generate(poly);
 		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
@@ -1107,6 +1107,7 @@ Diaplay the polygon with visualization results
 
 void display_polyhedron(Polyhedron* poly)
 {
+	/**/
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glPolygonOffset(1., 1.);
 
@@ -1119,18 +1120,25 @@ void display_polyhedron(Polyhedron* poly)
 	{
 		case 1:
 		{
+			glPointSize(5);
 			glBegin(GL_POINTS);
-			for (int i = 0; i < poly->nverts; i++) {
+			for (int i = 0; i < poly->nverts; i++)
+			{
 				Vertex* temp_v = poly->vlist[i];
 				//printf("i: %d x: %f y: %f z: %f\n", i, temp_v->x, temp_v->y, temp_v->z);
 				glColor3f(temp_v->R, temp_v->G, temp_v->B);
 				glVertex3f(temp_v->x, temp_v->y, temp_v->z);
 			}
 			glEnd();
+
+			//metaballs->Render(true, false);
+
+			break;
 		}
-
+		case 2:
+			metaballs->Render(false, true);
+			break;
 	}
-
 
 	/*
 	switch (display_mode) {

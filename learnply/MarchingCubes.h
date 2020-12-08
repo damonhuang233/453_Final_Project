@@ -7,6 +7,9 @@
 #include "gl/glew.h"
 #include "gl/freeglut.h"
 
+#include <bitset>
+#include <iostream>
+
 struct Triangle
 {
     public:
@@ -396,7 +399,7 @@ class MarchingCubes
 		void SetIsoValue(float);
 
 		void Generate(Polyhedron *);
-		void Render();
+		void Render(bool, bool);
 
 		void Reset();
 };
