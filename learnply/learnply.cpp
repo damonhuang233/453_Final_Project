@@ -56,11 +56,11 @@ float  tmax = win_width / (SCALE*NPN);
 float  dmax = SCALE / win_width;
 unsigned char *pixels;
 
-float anim = 0.;
+float anim = 2.;
 int elp_mil_sec = 0;
 int pass_mil_sec = 0;
-int speed = 5;
-float max_iso = 20.;
+int speed = 20;
+float min_iso = 0.8;
 #define DM  ((float) (1.0/(100-1.0)))
 
 /******************************************************************************
@@ -188,7 +188,7 @@ void drawPolyline(PolyLine pl, double width = 1.0, double R = 1.0, double G = 0.
 char ply_files[50][100];
 int num_of_plys = 0;
 int current_file_idx = 0;
-char ply_dir[] = "../DataSets";
+char ply_dir[] = "../DataSets/Metaballs";
 
 void read_directory(char* directory_name)
 {
@@ -987,7 +987,7 @@ void keyboard(unsigned char key, int x, int y) {
 	
 	case '1':
 		display_mode = 1;
-		metaballs->SetIsoValue(10.);
+		metaballs->SetIsoValue(1.);
 		metaballs->Generate(poly);
 		glutIdleFunc(NULL);
 		glutPostRedisplay();
@@ -997,7 +997,7 @@ void keyboard(unsigned char key, int x, int y) {
 		display_mode = 2;
 		anim = 0.;
 		glutIdleFunc(NULL);
-		metaballs->SetIsoValue(10.);
+		metaballs->SetIsoValue(1.);
 		metaballs->Generate(poly);
 		glutPostRedisplay();
 		break;
@@ -1150,11 +1150,12 @@ void display_polyhedron(Polyhedron* poly)
 		case 3:
 			int cur_elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
 			pass_mil_sec += cur_elp_mil_sec - elp_mil_sec;
-			if (anim > max_iso)
-				anim = 0.;
+			if (anim < min_iso)
+				anim = 2.;
 			if (pass_mil_sec > (500 / speed))
 			{
-				anim += 0.1;
+				anim -= 0.01;
+				//printf("iso_val: %f", anim);
 				pass_mil_sec = 0;
 				elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
 			}
