@@ -373,8 +373,8 @@ class MarchingCubes
 
 		void SetIsoValue(float);
 
-		void Init(Polyhedron *);
-		void Generate();
+		void Generate(Polyhedron *);
+		void Render();
 
 		void free_cubes();
 };

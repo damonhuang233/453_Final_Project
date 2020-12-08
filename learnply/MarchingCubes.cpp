@@ -35,8 +35,7 @@ void MarchingCubes::free_cubes()
 		delete [] cubes;
 }
 
-//TODO: one method of optimization is to combine Init() and Generate()
-void MarchingCubes::Init(Polyhedron* p)
+void MarchingCubes::Generate(Polyhedron* p)
 {
 	free_cubes();
 
@@ -159,7 +158,7 @@ void MarchingCubes::Init(Polyhedron* p)
 	}
 }
 
-void MarchingCubes::Generate()
+void MarchingCubes::Render()
 {
 
 }

@@ -234,7 +234,7 @@ int main(int argc, char* argv[])
 	poly->write_info();
 
 	isosurface = new MarchingCubes();
-	isosurface->Init(poly);
+	isosurface->Generate(poly);
 
 	/* Example of how to access vertexs in cubes
 	*  Getting the 7th cube vertexs and change color R to 1.
@@ -1021,7 +1021,7 @@ void keyboard(unsigned char key, int x, int y) {
 		poly->write_info();
 
 		//isosurface->free_cubes();
-		isosurface->Init(poly);
+		isosurface->Generate(poly);
 		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
@@ -1030,7 +1030,7 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'v':
 	{
 		isosurface->SetIsoValue(0);
-		isosurface->Init(poly);
+		isosurface->Generate(poly);
 		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
