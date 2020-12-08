@@ -203,7 +203,7 @@ void read_directory(char* directory_name)
 	}
 }
 
-Cubes* cubes;
+MarchingCubes* isosurface;
 
 /******************************************************************************
 Main program.
@@ -233,7 +233,8 @@ int main(int argc, char* argv[])
 	poly->initialize(); // initialize the mesh
 	poly->write_info();
 
-	cubes = init_cubes(poly);
+	isosurface = new MarchingCubes();
+	isosurface->Init(poly);
 
 	/* Example of how to access vertexs in cubes
 	*  Getting the 7th cube vertexs and change color R to 1.
@@ -247,7 +248,7 @@ int main(int argc, char* argv[])
 	cubes->cubes[6].verts[7]->R = 1.;
 	*/
 
-	MarchingCubes(cubes, poly);
+	//MarchingCubes(isosurface, poly);
 
 	/*init glut and create window*/
 	glutInit(&argc, argv);
@@ -1019,16 +1020,18 @@ void keyboard(unsigned char key, int x, int y) {
 		poly->initialize();
 		poly->write_info();
 
-		init_cubes(poly);
-		MarchingCubes(cubes, poly);
+		//isosurface->free_cubes();
+		isosurface->Init(poly);
+		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
 	}
 	
 	case 'v':
 	{
-		set_new_iso_value();
-		MarchingCubes(cubes, poly);
+		isosurface->SetIsoValue(0);
+		isosurface->Init(poly);
+		//MarchingCubes(isosurface, poly);
 		glutPostRedisplay();
 		break;
 	}
