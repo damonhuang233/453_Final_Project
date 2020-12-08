@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
 	poly->write_info();
 
 	metaballs = new MarchingCubes();
-	metaballs->SetIsoValue(10.);
+	metaballs->SetIsoValue(1.);
 	metaballs->Generate(poly);
 
 	/* Example of how to access vertexs in cubes
@@ -1139,8 +1139,6 @@ void display_polyhedron(Polyhedron* poly)
 				glVertex3f(temp_v->x, temp_v->y, temp_v->z);
 			}
 			glEnd();
-
-			//metaballs->Render(true, false);
 
 			break;
 		}

@@ -25,9 +25,9 @@ Triangle::Triangle(Vertex a, Vertex b, Vertex c)
 
 	float len = sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
 
-	normal.x /= -len;
-	normal.y /= -len;
-	normal.z /= -len;
+	normal.x /= len;
+	normal.y /= len;
+	normal.z /= len;
 
 	//std::cout << "NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << "\n";
 }
