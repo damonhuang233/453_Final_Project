@@ -1,2 +1,4 @@
 D:\cs\CS453\453_Final_Project\Debug\learnply.exe
 D:\cs\CS453\453_Final_Project\Debug\learnply.pdb
+D:\cs\CS453\fp\453_Final_Project\Debug\learnply.exe
+D:\cs\CS453\fp\453_Final_Project\Debug\learnply.pdb

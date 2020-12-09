@@ -65,6 +65,8 @@ int speed = 20;
 float min_iso = 1.;
 #define DM  ((float) (1.0/(100-1.0)))
 
+bool Frozen = FALSE;
+
 /******************************************************************************
 Forward declaration of functions
 ******************************************************************************/
@@ -1053,6 +1055,11 @@ void keyboard(unsigned char key, int x, int y) {
 		glutPostRedisplay();
 		break;
 	}
+
+	case 'f':
+		Frozen = !Frozen;
+		glutPostRedisplay();
+		break;
     /*
 	case '3':
 	{
@@ -1162,7 +1169,8 @@ void display_polyhedron(Polyhedron* poly)
 				anim = ISO_START;
 			if (pass_mil_sec > (500 / speed))
 			{
-				anim -= 0.01;
+				if (!Frozen)
+					anim -= 0.01;
 				//printf("iso_val: %f\n", anim);
 				pass_mil_sec = 0;
 				elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
