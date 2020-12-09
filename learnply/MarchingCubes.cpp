@@ -79,7 +79,7 @@ void MarchingCubes::Generate(Polyhedron* p)
 
 	int num_of_cubes = num_of_lines_per_axis * num_of_lines_per_axis * num_of_lines_per_axis;
 
-	num_of_cubes = num_of_cubes;
+	this->num_of_cubes = num_of_cubes;
 
 	cubes = new Cube[num_of_cubes];
 
