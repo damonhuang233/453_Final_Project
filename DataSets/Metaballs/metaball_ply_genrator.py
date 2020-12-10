@@ -17,18 +17,19 @@ def magnitude( x , y , z , x0, y0, z0 ):
     inner = ( x - x0 ) ** 2 + ( y - y0 ) ** 2 + ( z - z0 ) ** 2 
     return sqrt(inner)
 
-def _function(x, y, z, Metaballs):
+def _function(x, y, z, Metaballs, g = 1.):
     # print(x, y, z)
     iso_value = 0.
     for mb in Metaballs:
         t = float(mb[1])
         b = magnitude(x, y, z, mb[0][0], mb[0][1], mb[0][2])
+        b = pow(b, g)
         if b == 0.:
             continue
         iso_value += float(t) / float(b)
     return iso_value
 
-def generate_data(Metaballs, data, grid_len, num_p):
+def generate_data(Metaballs, data, grid_len, num_p, g):
 
     data.append("ply")
     data.append("format ascii 1.0")
@@ -65,7 +66,7 @@ def generate_data(Metaballs, data, grid_len, num_p):
                 v_x = tll_p[0] + float(k) * interval 
                 v_y = tll_p[1] - float(j) * interval 
                 v_z = tll_p[2] - float(i) * interval 
-                v_s = _function(v_x, v_y, v_z, Metaballs)
+                v_s = _function(v_x, v_y, v_z, Metaballs, g)
                 new_vertex = vertex(v_x, v_y, v_z, v_s)
                 xy_plane.append(new_vertex)
         vertexs.append(xy_plane)
@@ -144,6 +145,8 @@ def setup():
         if num_p > 1:
             break
     
+    g = input("Enter the goo-factor: (1. in default)\n")
+
     Metaballs = []
 
     add_more = True
@@ -183,7 +186,7 @@ def setup():
         if am == "N":
             add_more = False
 
-    generate_data(Metaballs, data, grid_len, num_p)
+    generate_data(Metaballs, data, grid_len, num_p, float(g))
     output_file(data, file_name)
     
 setup()
