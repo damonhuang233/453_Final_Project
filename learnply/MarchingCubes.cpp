@@ -25,9 +25,9 @@ Triangle::Triangle(Vertex a, Vertex b, Vertex c)
 
 	float len = sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
 
-	normal.x /= -len;
-	normal.y /= -len;
-	normal.z /= -len;
+	normal.x /= len;
+	normal.y /= len;
+	normal.z /= len;
 
 	//std::cout << "NORMAL: " << normal.x << ", " << normal.y << ", " << normal.z << "\n";
 }
@@ -79,7 +79,7 @@ void MarchingCubes::Generate(Polyhedron* p)
 
 	int num_of_cubes = num_of_lines_per_axis * num_of_lines_per_axis * num_of_lines_per_axis;
 
-	num_of_cubes = num_of_cubes;
+	this->num_of_cubes = num_of_cubes;
 
 	cubes = new Cube[num_of_cubes];
 
@@ -328,7 +328,7 @@ void MarchingCubes::Generate(Polyhedron* p)
 
 		// The loop should run at most 5 times, since there is a
 		// maximum of 5 triangles that can be generated per cube.
-		for (int j = 0; triTable[cubes[i].vTable][j] != -1 && j < 15; j += 3)
+		for (int j = 0;  j < 15 && triTable[cubes[i].vTable][j] != -1 ; j += 3)
 		{
 			/*
 			if (i == 2)

@@ -56,12 +56,16 @@ float  tmax = win_width / (SCALE*NPN);
 float  dmax = SCALE / win_width;
 unsigned char *pixels;
 
-float anim = 0.;
+#define ISO_START 3.
+
+float anim = ISO_START;
 int elp_mil_sec = 0;
 int pass_mil_sec = 0;
-int speed = 5;
-float max_iso = 20.;
+int speed = 20;
+float min_iso = 1.;
 #define DM  ((float) (1.0/(100-1.0)))
+
+bool Frozen = FALSE;
 
 /******************************************************************************
 Forward declaration of functions
@@ -188,7 +192,7 @@ void drawPolyline(PolyLine pl, double width = 1.0, double R = 1.0, double G = 0.
 char ply_files[50][100];
 int num_of_plys = 0;
 int current_file_idx = 0;
-char ply_dir[] = "../DataSets";
+char ply_dir[] = "../DataSets/Metaballs";
 
 void read_directory(char* directory_name)
 {
@@ -239,7 +243,7 @@ int main(int argc, char* argv[])
 	poly->write_info();
 
 	metaballs = new MarchingCubes();
-	metaballs->SetIsoValue(10.);
+	metaballs->SetIsoValue(ISO_START);
 	metaballs->Generate(poly);
 
 	/* Example of how to access vertexs in cubes
@@ -987,7 +991,7 @@ void keyboard(unsigned char key, int x, int y) {
 	
 	case '1':
 		display_mode = 1;
-		metaballs->SetIsoValue(10.);
+		metaballs->SetIsoValue(ISO_START);
 		metaballs->Generate(poly);
 		glutIdleFunc(NULL);
 		glutPostRedisplay();
@@ -997,7 +1001,7 @@ void keyboard(unsigned char key, int x, int y) {
 		display_mode = 2;
 		anim = 0.;
 		glutIdleFunc(NULL);
-		metaballs->SetIsoValue(10.);
+		metaballs->SetIsoValue(ISO_START);
 		metaballs->Generate(poly);
 		glutPostRedisplay();
 		break;
@@ -1042,7 +1046,20 @@ void keyboard(unsigned char key, int x, int y) {
 		glutPostRedisplay();
 		break;
 	}
-	
+
+	case 'm':
+	{
+		printf("Current minimum iso value: %f \n", min_iso);
+		printf("Enter the minimum iso value: \n");
+		scanf("%f", &min_iso);
+		glutPostRedisplay();
+		break;
+	}
+
+	case 'f':
+		Frozen = !Frozen;
+		glutPostRedisplay();
+		break;
     /*
 	case '3':
 	{
@@ -1129,7 +1146,7 @@ void display_polyhedron(Polyhedron* poly)
 		case 1:
 		{
 			glDisable(GL_LIGHTING);
-			glPointSize(5);
+			glPointSize(2);
 			glBegin(GL_POINTS);
 			for (int i = 0; i < poly->nverts; i++)
 			{
@@ -1140,8 +1157,6 @@ void display_polyhedron(Polyhedron* poly)
 			}
 			glEnd();
 
-			//metaballs->Render(true, false);
-
 			break;
 		}
 		case 2:
@@ -1150,11 +1165,13 @@ void display_polyhedron(Polyhedron* poly)
 		case 3:
 			int cur_elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
 			pass_mil_sec += cur_elp_mil_sec - elp_mil_sec;
-			if (anim > max_iso)
-				anim = 0.;
+			if (anim < min_iso)
+				anim = ISO_START;
 			if (pass_mil_sec > (500 / speed))
 			{
-				anim += 0.1;
+				if (!Frozen)
+					anim -= 0.01;
+				//printf("iso_val: %f\n", anim);
 				pass_mil_sec = 0;
 				elp_mil_sec = glutGet(GLUT_ELAPSED_TIME);
 			}
