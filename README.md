@@ -11,4 +11,4 @@ Hotkeys: \
 3: animated metaballs with decreasing threshold\
 m: set the minimum threshold in the animation\
 f: freeze the animation\
-n: switch to next dataset\
+n: switch to next dataset
